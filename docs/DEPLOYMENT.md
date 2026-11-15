@@ -48,6 +48,10 @@ Use the GitHub commands above after importing the history. You can also clone th
 
 ## Hugging Face Space
 
+[Open the deployed demo](https://huggingface.co/spaces/Shanmuk4622/autosource) or [check its health endpoint](https://shanmuk4622-autosource.hf.space/api/health). The health endpoint pings MongoDB before returning `{"status":"ok"}`.
+
+The Space builds from GitHub commit `548176fd85d1886646c08255d3969fce85dbf4a9`, which passed GitHub Actions. Its Dockerfile pins that commit so a rebuild uses the same source. To deploy a later version through the same Dockerfile, update the commit hash in its `ADD` instruction after GitHub Actions passes. The active app uses the Triad source from GitHub. Earlier AutoSource files still appear in the Space repository and are outside the running app's source.
+
 The root README has the configuration for a Docker Space on port `7860`. The same image runs MongoDB on an internal loopback address when no `MONGO_URI` is set. This supports a self-contained demo because Hugging Face restricts outbound ports, which can block a direct connection to a standard remote MongoDB port. The built-in database uses the Space’s container disk. Treat it as disposable and use sample documents. [Docker Spaces](https://huggingface.co/docs/hub/spaces-sdks-docker) · [Space networking](https://huggingface.co/docs/hub/en/spaces-overview#networking) · [Disk usage](https://huggingface.co/docs/hub/spaces-storage)
 
 1. Identify the existing Space in your Hugging Face account. Use that repository to replace its previous app files while keeping its URL and commit history. If choosing a new Space, select the Docker SDK.
