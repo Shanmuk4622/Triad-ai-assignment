@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#142246">
+  <title>TRIAD AI | Document Management</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+  <script src="{{ url_for('static', filename='app.js') }}" defer></script>
+</head>
+<body>
+  <main id="auth" class="auth-layout" hidden>
+    <aside class="auth-intro">
+      <div class="brand"><span class="brand-mark" aria-hidden="true"></span>TRIAD AI</div>
+      <div>
+        <h1>Document<br>management</h1>
+        <p>Find and share documents across divisions with approval from the teams that own them.</p>
+      </div>
+    </aside>
+    <section class="auth-panel" aria-labelledby="auth-heading">
+      <div class="auth-card">
+        <div class="tabs" aria-label="Account options">
+          <button type="button" id="login-tab" aria-pressed="true">Sign in</button>
+          <button type="button" id="signup-tab" aria-pressed="false">Create account</button>
+        </div>
+        <h2 id="auth-heading">Sign in</h2>
+        <form id="login-form" class="stack">
+          <label>Username or email<input name="username" autocomplete="username" required maxlength="254"></label>
+          <label>Password<input name="password" type="password" autocomplete="current-password" required maxlength="128"></label>
+          <button class="primary">Sign in</button>
+        </form>
+        <form id="signup-form" class="stack" hidden>
+          <label>Username<input name="username" autocomplete="username" required maxlength="100"></label>
+          <label>Email <span class="muted">(optional)</span><input name="email" type="email" autocomplete="email" maxlength="254"></label>
+          <label>Division<input name="division" list="signup-divisions" placeholder="Choose or enter a division" required maxlength="80"></label>
+          <datalist id="signup-divisions"><option value="Division A"></option><option value="Division B"></option></datalist>
+          <label>Password<input name="password" type="password" autocomplete="new-password" required minlength="6" maxlength="128" placeholder="At least 6 characters"></label>
+          <button class="primary">Create account</button>
+        </form>
+        <p id="auth-message" class="message" role="status" hidden></p>
+      </div>
+    </section>
+  </main>
+
+  <div id="application" class="app-shell" hidden>
+    <aside class="sidebar">
+      <a href="#documents" class="brand"><span class="brand-mark" aria-hidden="true"></span>TRIAD AI</a>
+      <nav aria-label="Main navigation">
+        <a href="#documents" data-page="documents"><span class="nav-icon" aria-hidden="true">▤</span> Documents</a>
+        <a href="#search" data-page="search"><span class="nav-icon" aria-hidden="true">⌕</span> Advanced search</a>
+        <a href="#requests" data-page="requests"><span class="nav-icon" aria-hidden="true">⇄</span> Access requests</a>
+        <a href="#settings" data-page="settings"><span class="nav-icon" aria-hidden="true">⚙</span> Settings</a>
+      </nav>
+    </aside>
+
+    <div class="workspace">
+      <header class="topbar">
+        <span class="product">Document management</span>
+        <div class="account">
+          <span class="avatar" id="avatar" aria-hidden="true"></span>
+          <div><strong id="account-name"></strong><span id="account-division" class="account-division"></span></div>
+          <button type="button" class="quiet" id="sign-out">Sign out</button>
+        </div>
+      </header>
+
+      <main id="workspace-content" class="content">
+        <p id="app-message" class="message" role="status" hidden></p>
+        <section id="documents" class="view" hidden>
+          <header class="page-header">
+            <div><h1>Documents</h1><p>Browse your division’s files and documents shared with you.</p></div>
+            <button type="button" class="primary" id="open-upload"><span aria-hidden="true">＋</span> Upload document</button>
+          </header>
+          <div class="panel">
+            <div class="tabs panel-tabs" aria-label="Document scope">
+              <button type="button" id="accessible-tab" aria-pressed="true">Accessible documents</button>
+              <button type="button" id="catalog-tab" aria-pressed="false">Other divisions</button>
+            </div>
+            <form class="filter-bar" id="document-filters" aria-label="Document filters">
+              <div id="document-field-filters" class="filter-fields"></div>
+              <button class="secondary">Apply filters</button>
+              <button type="button" data-reset="document-filters" class="quiet">Clear</button>
+            </form>
+            <p id="catalog-note" class="panel-note" hidden>Open a document to request access from its owning division.</p>
+            <div id="documents-list" class="list-area" aria-live="polite"></div>
+          </div>
+        </section>
+
+        <section id="details" class="view" hidden>
+          <a href="#documents" class="back-link">← Documents</a>
+          <header class="page-header"><div><h1 id="detail-title">Document details</h1><p id="detail-division"></p></div><div id="detail-actions" class="actions"></div></header>
+          <article class="panel inner-panel" id="detail-panel" hidden>
+            <h2>Document details</h2>
+            <dl id="detail-metadata" class="metadata-grid"></dl>
+            <p id="detail-status" class="muted" hidden></p>
+          </article>
+        </section>
+
+        <section id="search" class="view" hidden>
+          <header class="page-header"><div><h1>Advanced search</h1><p>Search titles, metadata, and text extracted from PDFs and images.</p></div></header>
+          <div class="panel">
+            <form id="search-form" class="filter-bar search-form">
+              <label class="query">Search terms<input type="search" name="q" maxlength="150" placeholder="Enter a title, keyword, or phrase"></label>
+              <div id="search-field-filters" class="filter-fields"></div>
+              <button class="primary">Search</button>
+              <button type="button" data-reset="search-form" class="quiet">Clear</button>
+            </form>
+            <div id="search-results" class="list-area" aria-live="polite"></div>
+          </div>
+        </section>
+
+        <section id="requests" class="view" hidden>
+          <header class="page-header"><div><h1>Access requests</h1><p>Review incoming requests for documents owned by your division.</p></div></header>
+          <div id="requests-list" class="panel list-area" aria-live="polite"></div>
+        </section>
+
+        <section id="settings" class="view" hidden>
+          <header class="page-header">
+            <div><h1>Settings</h1><p>Manage the metadata fields used for uploads and filters.</p></div>
+            <button type="button" class="primary" id="add-field" hidden><span aria-hidden="true">＋</span> Add field</button>
+          </header>
+          <div class="panel list-area" id="fields-list"></div>
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <dialog id="upload-dialog" aria-labelledby="upload-heading">
+    <div class="dialog-body">
+      <h2 id="upload-heading">Upload document</h2>
+      <form id="upload-form" class="stack">
+        <label>Division<input id="upload-division" readonly></label>
+        <label>Title <span class="muted">(optional)</span><input name="title" maxlength="230" placeholder="Uses the file name if blank"></label>
+        <label>PDF or image<input type="file" required name="file" accept=".pdf,.png,.jpg,.jpeg,.tiff,.tif,.bmp,.webp,.gif"></label>
+        <div id="upload-fields" class="stack"></div>
+        <p class="muted hint">Up to 16 MB and 20 pages or frames. Text extraction runs during upload.</p>
+        <p id="upload-message" class="message" role="status" hidden></p>
+        <div class="dialog-actions"><button type="button" class="secondary" data-close="upload-dialog">Cancel</button><button class="primary">Upload document</button></div>
+      </form>
+    </div>
+  </dialog>
+
+  <dialog id="field-dialog" aria-labelledby="field-heading">
+    <div class="dialog-body">
+      <h2 id="field-heading">Add field</h2>
+      <form id="field-form" class="stack">
+        <label>Field name<input name="label" required maxlength="60"></label>
+        <label>Suggested values <span class="muted">(optional)</span><textarea name="options" rows="4" placeholder="Enter one value per line"></textarea></label>
+        <p id="field-message" class="message" role="status" hidden></p>
+        <div class="dialog-actions"><button type="button" class="secondary" data-close="field-dialog">Cancel</button><button class="primary">Save field</button></div>
+      </form>
+    </div>
+  </dialog>
+</body>
+</html>
