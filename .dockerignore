@@ -1,0 +1,9 @@
+.git
+.env*
+.venv
+**/__pycache__
+.pytest_cache
+data
+test_report.txt
+*.bundle
+Internship*Assignment*.pdf
