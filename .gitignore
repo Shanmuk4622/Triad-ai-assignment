@@ -7,5 +7,6 @@ __pycache__/
 .pytest_cache/
 data/
 test_report.txt
+triad_starter_report.txt
 /triad-dms-history.bundle
 /Internship*Assignment*.pdf

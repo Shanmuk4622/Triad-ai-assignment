@@ -41,7 +41,7 @@ If you received `triad-dms-history.bundle` alongside the project and `git status
 git bundle verify .\triad-dms-history.bundle
 git fetch .\triad-dms-history.bundle main
 git reset --mixed FETCH_HEAD
-git log --oneline -4
+git log --oneline
 ```
 
 Use the GitHub commands above after importing the history. You can also clone the bundle into a new folder with `git clone .\triad-dms-history.bundle triad-dms` and set `origin` to your GitHub URL.

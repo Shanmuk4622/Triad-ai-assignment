@@ -18,12 +18,19 @@ jobs:
           set -o pipefail
           docker compose exec -T app python -m unittest discover -s tests -v 2>&1 | tee test_report.txt
         shell: bash
+      - name: Run Triad's starter upload test
+        run: |
+          python -m pip install requests Pillow
+          curl -fsSL 'https://raw.githubusercontent.com/rithish-sripaul-triad-ai/triad-ai-interns-dms/9ee49598fbc855841a84462e1e729ec0c71761aa/test_api.py' -o "$RUNNER_TEMP/test_api.py"
+          python tests/run_triad_starter.py "$RUNNER_TEMP/test_api.py"
       - name: Save the test report
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: test-report
-          path: test_report.txt
+          path: |
+            test_report.txt
+            triad_starter_report.txt
           if-no-files-found: ignore
       - name: Show service logs on failure
         if: failure()

@@ -5,5 +5,6 @@
 .pytest_cache
 data
 test_report.txt
+triad_starter_report.txt
 *.bundle
 Internship*Assignment*.pdf
